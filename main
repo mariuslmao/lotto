@@ -1,0 +1,154 @@
+import random
+
+superzahl = 0
+list_filled_numbers = [0, 0, 0, 0, 0, 0]
+real_superzahl = 0
+real_numbers = [0, 0, 0, 0, 0, 0]
+#-----------------------------------------------------------------------------------------------------------------------
+def fill_in():
+    global superzahl
+    global list_filled_numbers
+
+    def proof_int(number):
+        if number.isdigit():
+            return int(number)
+        else:
+            print(str(number) + " ist keine (gültige) Zahl. Bitte gebe eine gültige natürliche Zahl ein")
+            fill_in()
+
+    def proof_range(number, max, min):
+        if (number > max) or (number < min):
+            print("Die Zahl: " + str(number) + " liegt nicht im Intervall " + str(min) + " bis " + str(max))
+            fill_in()
+        else:
+            return True
+
+    def proof(number, max, min):
+        number = proof_int(number)
+        proof_range(number, max, min)
+
+    def double_proof(list):
+        number_counter = 0
+        counter_correct_numbers = 0
+        while number_counter <= 4:
+            if list[number_counter] != list[number_counter + 1]:
+                counter_correct_numbers += 1
+            number_counter += 1
+        if counter_correct_numbers != 5:
+            print("Du kannst jede Zahl immer nur einmal ankreuzen!")
+            fill_in()
+        else:
+            return list
+
+    number1 = (input("Bitte nenne mir deine 1. Zahl zwischen 1 und 49: "))
+    proof(number1, 49, 1)
+    number2 = (input("Bitte nenne mir deine 2. Zahl zwischen 1 und 49: "))
+    proof(number2, 49, 1)
+    number3 = (input("Bitte nenne mir deine 3. Zahl zwischen 1 und 49: "))
+    proof(number3, 49, 1)
+    number4 = (input("Bitte nenne mir deine 4. Zahl zwischen 1 und 49: "))
+    proof(number4, 49, 1)
+    number5 = (input("Bitte nenne mir deine 5. Zahl zwischen 1 und 49: "))
+    proof(number5, 49, 1)
+    number6 = (input("Bitte nenne mir deine 6. Zahl zwischen 1 und 49: "))
+    proof(number6, 49, 1)
+    superzahl = (input("Bitte gebe deine Superzahl zwischen 1 und 9 an: "))
+    proof(superzahl, 9, 1)
+
+    list_filled_numbers = [number1, number2, number3, number4, number5, number6]
+    list_filled_numbers.sort()
+    list_filled_numbers = list(map(int, list_filled_numbers))
+    double_proof(list_filled_numbers)
+    return (list_filled_numbers)
+
+def rifled_numbers():
+    global real_numbers
+    global real_superzahl
+
+    all_numbers = []
+    all_numbers.extend(range(1, 50))
+    real_numbers = random.sample(all_numbers, 6)
+    real_numbers.sort()
+
+    all_possible_superzahlen = []
+    all_possible_superzahlen.extend(range(1, 10))
+    real_superzahl = random.sample(all_possible_superzahlen, 1)
+
+
+
+def compare(list1, list2):
+    number_end = 5
+    number_steps = 1
+    number_start = 0
+    number_counter = number_start
+    counter_correct_numbers = 0
+
+    while number_counter <= number_end:
+        if list1[number_counter] in list2:
+            counter_correct_numbers += 1
+        number_counter += number_steps
+    return counter_correct_numbers
+
+def case(number, case):
+    if number == 6 and case == True:
+        return 1
+    elif number == 6 and case == False:
+        return 2
+    elif number == 5 and case == True:
+        return 3
+    elif number == 5 and case == False:
+        return 4
+    elif number == 4 and case == True:
+        return 5
+    elif number == 4 and case == False:
+        return 6
+    elif number == 3 and case == True:
+        return 7
+    elif number == 3 and case == False:
+        return 8
+    elif number == 2 and case == True:
+        return 9
+    else:
+        return "Keine"
+
+def switch(zahl):
+    dic = {
+        "Keine": "Leider nichts gewonnen. Chance: 91,5 %",
+        9: "Chance: 1,32 %",
+        8: "Chance: 1,56 %",
+        7: "Chance: 0,18 %",
+        6: "Chance: 0,087 %",
+        5: "Chance: 0,0097 %",
+        4: "Chance: 0,0017 %",
+        3: "Chance: 0,00018 %",
+        2: "Chance: 0,0000064 %",
+        1: "Chance: 0,00000072 %",
+    }
+
+    return dic.get(zahl)
+
+
+#-----------------------------------------------------------------------------------------------------------------------
+
+# Schein wird vom User ausgefüllt
+fill_in()
+list(map(int, list_filled_numbers))
+print("Deine Glückszahlen sind: ", list_filled_numbers, "\nDeine Superzahl ist die: " + str(superzahl))
+
+# Lotto zahlen werden gezogen
+rifled_numbers()
+print("Die Lottozahlen wurden gezogen! ", real_numbers,  "\nDie Superzahl ist die: ", str(real_superzahl) + "\nIch hoffe du hattest Glück!")
+
+#Vergleich der Zahlen
+richtige = compare(list_filled_numbers, real_numbers)
+case_superzahl = real_superzahl == superzahl
+
+# Gewinnermittlung
+gewinnklasse = case(richtige, case_superzahl)
+print("Du bist in der Gewinnklasse: ", gewinnklasse)
+
+# Preisausgabe
+print(switch(gewinnklasse))
+print("Danke fürs mitspielen!")
+
+
